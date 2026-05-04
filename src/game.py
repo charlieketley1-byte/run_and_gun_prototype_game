@@ -315,6 +315,11 @@ class Game:
             pygame.draw.rect(target, (220, 90, 160), (bx, by, int(bw * ratio), bh))
             t = self.font.render("BOSS", True, (230, 230, 230))
             target.blit(t, (bx, by + 18))
+            
+        if hasattr(self.player.weapon, "shots_left"):
+            shots = self.player.weapon.shots_left
+            txt = self.font.render(f"SHOTGUN: {shots} shots left", True, (255, 200, 50))
+            target.blit(txt, (20, 60))
 
     def draw_center_text(self, text: str, y: int, big: bool = False, target: pygame.Surface | None = None) -> None:
         if target is None:

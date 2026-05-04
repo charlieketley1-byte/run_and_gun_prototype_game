@@ -128,6 +128,9 @@ class Player(pygame.sprite.Sprite):
             self.coyote_timer = max(0.0, self.coyote_timer - dt)
 
         self.weapon.update(dt)
+        
+        if hasattr(self.weapon, "shots_left") and self.weapon.shots_left <= 0:
+            self.weapon = Weapon()
 
         # Gravity
         self.vel.y += settings.GRAVITY * dt

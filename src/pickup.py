@@ -15,6 +15,7 @@ class PickUp(pygame.sprite.Sprite):
         
         if self.kind == "shotgun":
             self.image = load_image("shotgun.png")
+            self.image = pygame.transform.scale(self.image, (64, 64))
             self.rect = self.image.get_rect(topleft=pos)
             self.anim = None
             
@@ -36,16 +37,17 @@ class PickUp(pygame.sprite.Sprite):
                 clamp=True
             )
 
-        if len(self.frames) == 0:
-            raise ValueError("pickup_sheet.png: no frames were sliced (check row/stride/frame size).")
+            if len(self.frames) == 0:
+                raise ValueError("pickup_sheet.png: no frames were sliced (check row/stride/frame size).")
 
         # Animation (tweak duration for how “sparkly” it feels)
-        self.anim = Animation(self.frames, frame_duration=0.20, loop=True)
+            self.anim = Animation(self.frames, frame_duration=0.20, loop=True)
 
-        self.image = self.anim.image
-        self.rect = self.image.get_rect(topleft=pos)
+            self.image = self.anim.image
+            self.rect = self.image.get_rect(topleft=pos)
 
     def apply(self, player) -> None:
+        print("PICKED UP:", self.kind)
         """What happens when the player collects this pickup."""
         if self.kind == "health":
             player.heal(25)
@@ -53,5 +55,6 @@ class PickUp(pygame.sprite.Sprite):
             player.weapon = Shotgun()
 
     def update(self, dt: float, *_args) -> None:
-        self.anim.update(dt)
-        self.image = self.anim.image
+        if self.anim:
+            self.anim.update(dt)
+            self.image = self.anim.image
