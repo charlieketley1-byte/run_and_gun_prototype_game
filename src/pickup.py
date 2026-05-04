@@ -5,28 +5,36 @@ from __future__ import annotations
 import pygame
 from .utils import load_image, slice_sprite_sheet_row
 from .animation import Animation
+from .shotgun import Shotgun
 
 
 class PickUp(pygame.sprite.Sprite):
     def __init__(self, pos: tuple[int, int], kind: str = "health"):
         super().__init__()
         self.kind = kind
+        
+        if self.kind == "shotgun":
+            self.image = load_image("shotgun.png")
+            self.rect = self.image.get_rect(topleft=pos)
+            self.anim = None
+            
+        else:
 
-        sheet = load_image("pickup_sheet.png")
+            sheet = load_image("pickup_sheet.png")
 
-        # If your sheet uses gaps/padding, keep using your stride_x version.
-        # (Your current call already uses stride_x/clamp=True.)
-        self.frames = slice_sprite_sheet_row(
-            sheet,
-            row=0,
-            frame_w=32,
-            frame_h=32,
-            num_frames=8,        # request “up to” (clamp=True will stop safely)
-            stride_x=32,         # change to 64 if you have 32px blanks between frames
-            start_x=0,
-            start_y=0,
-            clamp=True
-        )
+            # If your sheet uses gaps/padding, keep using your stride_x version.
+            # (Your current call already uses stride_x/clamp=True.)
+            self.frames = slice_sprite_sheet_row(
+                sheet,
+                row=0,
+                frame_w=32,
+                frame_h=32,
+                num_frames=8,        # request “up to” (clamp=True will stop safely)
+                stride_x=32,         # change to 64 if you have 32px blanks between frames
+                start_x=0,
+                start_y=0,
+                clamp=True
+            )
 
         if len(self.frames) == 0:
             raise ValueError("pickup_sheet.png: no frames were sliced (check row/stride/frame size).")
@@ -41,6 +49,8 @@ class PickUp(pygame.sprite.Sprite):
         """What happens when the player collects this pickup."""
         if self.kind == "health":
             player.heal(25)
+        elif self.kind == "shotgun":
+            player.weapon = Shotgun()
 
     def update(self, dt: float, *_args) -> None:
         self.anim.update(dt)

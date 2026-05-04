@@ -34,6 +34,7 @@ class Level:
     BOSS_SPAWN   = 93
     EXIT_FLAG    = 94
     SHOOTER_ENEMY_SPAWN = 95
+    SHOTGUN_PICKUP = 96
 
     def __init__(self, csv_name: str):
         self.csv_name = csv_name
@@ -157,6 +158,15 @@ class Level:
                     pickup_height = 32
                     spawn_y = world_y - (pickup_height - tile_size)
                     self.pickups.add(PickUp((world_x, spawn_y), kind="health"))
+                
+                #-------------------------
+                #SHOTGUN PICKUP
+                #-------------------------
+                elif tile_id == self.SHOTGUN_PICKUP:
+                    print("SHOTGUN SPAWNED AT", world_x, world_y)
+                    pickup_height = 32
+                    spawn_y = world_y - (pickup_height - tile_size)
+                    self.pickups.add(PickUp((world_x, spawn_y), kind="shotgun"))
 
                 # ------------------------
                 # BOSS SPAWN (64x64 sprite)
@@ -239,3 +249,4 @@ class Level:
                 (self.exit_rect.x - camera_x, self.exit_rect.y - camera_y, self.exit_rect.w, self.exit_rect.h),
                 2,
             )
+            

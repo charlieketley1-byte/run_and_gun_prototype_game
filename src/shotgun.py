@@ -16,3 +16,15 @@ class Shotgun:
     def shoot(self, bullets_group, pos, direction):
         if self.shots_left <= 0:
             return     
+        if  self.time_since_shot < self.cooldown:
+            return
+        
+        self.time_since_shot = 0
+        self.shots_left -=1
+        
+        for i in range(self.pellets):
+            bullet = Bullet(pos, direction)
+            bullet.vel.y = (i - 2) * self.spread
+            
+            bullets_group.add(bullet)
+        
